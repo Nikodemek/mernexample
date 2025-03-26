@@ -9,10 +9,7 @@ import axios from "axios";
 import { useParams, useHistory, Link } from "react-router-dom";
 
 export default function Edit() {
-  const apiURL = "http://localhost:5000/";
-
-  //local backend
-  // const localURL = "http://localhost:5000/";
+  const apiURL = process.env.REACT_APP_API_URL;
 
   //state data
   const [newEditedperson, setNeweditedperson] = useState({
@@ -32,7 +29,7 @@ export default function Edit() {
 
   useEffect(() => {
     axios
-      .get(`${apiURL}records/` + id)
+      .get(`${apiURL}/records/` + id)
       .then((response) => {
         setNeweditedperson({
           person_name: response.data.person_name,
@@ -43,7 +40,7 @@ export default function Edit() {
       .catch(function (error) {
         console.log(" error message", error.message);
       });
-  }, [id]);
+  }, [id, apiURL]);
 
   // These functions will update the state values.
   const onChangePersonName = (e) => {
@@ -66,7 +63,7 @@ export default function Edit() {
     e.preventDefault();
 
     // This will send a post request to update the data in the database.
-    await axios.patch(`${apiURL}records/` + id, newEditedperson);
+    await axios.patch(`${apiURL}/records/` + id, newEditedperson);
     console.log(whatchanged);
     let message = Object.values(whatchanged).join(" ");
     alertify.success(message, 1);

@@ -26,11 +26,8 @@ const Record = ({ record, deleteRecord }) => (
 );
 
 export default function RecordList() {
-  const apiURL = "http://localhost:5000/";
-
-  //local backend
-  //const localURL = "http://localhost:5000/";
-
+  const apiURL = process.env.REACT_APP_API_URL;
+  
   const override = css`
     display: block;
     margin: 0 auto;
@@ -40,18 +37,18 @@ export default function RecordList() {
   const [records, setRecords] = useState([]);
   useEffect(() => {
     axios
-      .get(`${apiURL}records/`) //if you didnt deploy to heroku, use ${localURL}
+      .get(`${apiURL}/records/`) //if you didnt deploy to heroku, use ${localURL}
       .then((response) => {
         setRecords(response.data);
       })
       .catch(function (error) {
         console.log(error.message);
       });
-  }, []);
+  }, [apiURL]);
 
   const deleteRecord = (id) => {
     axios
-      .delete(`${apiURL}records/` + id)
+      .delete(`${apiURL}/records/` + id)
       .then((response) => {
         console.log(response.message);
       })

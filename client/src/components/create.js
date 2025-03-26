@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 // This will require to npm install axios
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -6,16 +6,12 @@ import alertify from "alertifyjs";
 import "alertifyjs/build/css/alertify.css";
 
 export default function Create(props) {
+  const apiURL = process.env.REACT_APP_API_URL;
+
   //state data
   const [person_name, setPerson_name] = useState("");
   const [person_position, setPerson_position] = useState("");
   const [person_level, setPerson_level] = useState("");
-
-  //after heroku deployment
-  const apiURL = "http://localhost:5000/";
-
-  //local backend
-  //const localURL = "http://localhost:5000/";
 
   const [newperson, setNewperson] = useState({});
   //functions will update the state values.
@@ -45,10 +41,10 @@ export default function Create(props) {
     setPerson_level("");
   };
 
-  const senddata = (newp) => {
+  const senddata = useCallback((newp) => {
     if (newp.person_name != null) {
       axios
-        .post(`${apiURL}records/`, newp)
+        .post(`${apiURL}/records/`, newp)
         .then((res) => console.log(res.data))
         .catch(function (error) {
           console.log(error.response);
@@ -56,11 +52,11 @@ export default function Create(props) {
       alertify.success("new employee created", 1);
       //   setNewperson({})
     }
-  };
+  }, [apiURL]);
 
   useEffect(() => {
     senddata(newperson);
-  }, [newperson]);
+  }, [newperson, senddata]);
 
   return (
     // This following section will display the form that takes the input from the user.
